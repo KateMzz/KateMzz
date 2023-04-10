@@ -1,0 +1,32 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <h1 class="mb-3">Posts by {{view.kwargs.username}} </h1>
+    {% for post in posts %}
+        <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" alt="">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'user_posts' post.author.username %}">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted|date:"d F Y" }}</small>
+            </div>
+                {% if post.image %}
+                  <img src="{{ post.image.url }}" alt="" width="150" class="mr-3 md-2">
+                  {% endif %}
+            <h2><a class="article-title" href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content|safe }}</p>
+              <div class="article-category">
+                    {% if post.category %}
+                        {{ post.category }}
+                    {% endif %}
+              </div>
+          </div>
+        </article>
+    {% endfor %}
+<br/><br/>
+<hr>
+<br/>
+<form action="/" method="POST">
+    {% csrf_token %}
+    <button type="submit", name="blog_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button>
+</form>
+{% endblock %}
