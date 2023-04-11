@@ -1,5 +1,7 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
+{% load socialaccount %}
+{% load static %}
 {% block content %}
 <div class="content-section">
   <form method="POST">
@@ -9,10 +11,14 @@
       {{form|crispy}}
     </fieldset>
     <div class="form-group">
-      <button class="btn-outline-info" type="submit">Login</button>
+      <button class="btn-outline-info" type="submit">Login </button>
+      or
+      <a href="{% provider_login_url 'google' %}"><img src="{% static 'google.jpg' %}" width="32" height="32"/></a>
+      <div>
       <small class="text-muted ml-2">
         <a href="{% url 'password_reset' %}">Forgot?</a>
       </small>
+      </div>
     </div>
   </form>
   <div class="border-top pt-3">
