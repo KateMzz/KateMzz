@@ -6,4 +6,7 @@ from . import views
 
 urlpatterns = [
     path('', register, name="register"),
- ]
+    path('fav/<int:id>/', views.favourite_add, name='favourite_add'),
+    path('profile/favourites/', views.favourite_list, name='favourite_list'),
+
+]

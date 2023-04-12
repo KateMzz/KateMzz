@@ -1,24 +1,38 @@
+import json
+
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.views import View
+from django.views.decorators.http import require_POST
+
 from .models import Post, Category
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 
-def LikeView(request, pk):
-    post = Post.objects.get(id=pk)
-    post.likes.add(request.user)
-    # liked = False
-    # if post.likes.filter(id=request.user.id).exists():
-    #     post.likes.remove(request.user)
-    #     liked = False
-    # else:
-    #     post.likes.add(request.user)
-    #     liked = True
 
-    return HttpResponseRedirect(reverse('article-detail', args=[str(pk)]))
+@login_required
+def likes(request):
+    if request.POST.get('action') == 'post':
+        result = ''
+        id = request.POST.get('postid')
+        post = get_object_or_404(Post, id=id)
+        if post.post_likes.filter(id=request.user.id).exists():
+            post.post_likes.remove(request.user)
+            post.post_likes_count -= 1
+            result = post.post_likes_count
+            post.save()
+            post.get_absolute_url()
+        else:
+            post.post_likes.add(request.user)
+            post.post_likes_count += 1
+            result = post.post_likes_count
 
+            post.save()
+            post.get_absolute_url()
+        return JsonResponse(post.get_absolute_url(), {'result': result})
 
 
 def index(request):
