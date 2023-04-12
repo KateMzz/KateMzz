@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 
 @login_required
 def likes(request):
-    if request.POST.get('action') == 'post':
+    if request.method == "POST":
         result = ''
         id = request.POST.get('postid')
         post = get_object_or_404(Post, id=id)
@@ -24,15 +24,14 @@ def likes(request):
             post.post_likes_count -= 1
             result = post.post_likes_count
             post.save()
-            post.get_absolute_url()
         else:
             post.post_likes.add(request.user)
             post.post_likes_count += 1
             result = post.post_likes_count
-
             post.save()
-            post.get_absolute_url()
-        return JsonResponse(post.get_absolute_url(), {'result': result})
+        return JsonResponse({'result': result})
+    else:
+        return JsonResponse({'error': "the request is not supported"})
 
 
 def index(request):
