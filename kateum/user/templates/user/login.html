@@ -3,7 +3,7 @@
 {% load socialaccount %}
 {% load static %}
 {% block content %}
-<div class="content-section">
+<div class="content-section-login">
   <form method="POST">
     {% csrf_token %}
     <fieldset class="form-group">
@@ -11,12 +11,12 @@
       {{form|crispy}}
     </fieldset>
     <div class="form-group">
-      <button class="btn-outline-info" type="submit">Login </button>
+      <button class="btn-dark" type="submit">Login </button>
       or
-      <a href="{% provider_login_url 'google' %}"><img src="{% static 'google.jpg' %}" width="32" height="32"/></a>
+      <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="{% static 'google.jpg' %}" width="32" height="32"/></a>
       <div>
       <small class="text-muted ml-2">
-        <a href="{% url 'password_reset' %}">Forgot?</a>
+        <a href="{% url 'password_reset' %}">Forgot your pass?</a>
       </small>
       </div>
     </div>

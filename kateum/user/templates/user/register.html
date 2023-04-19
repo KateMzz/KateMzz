@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
-<div class="content-section">
+<div class="content-section-login">
   <form method="POST">
     {% csrf_token %}
     <fieldset class="form-group">
@@ -10,7 +10,7 @@
       {{form|crispy}}
     </fieldset>
     <div class="form-group">
-      <button class="btn-outline-info" type="submit">Sign Up</button>
+      <button class="btn-dark" type="submit">Sign Up</button>
       or
       <a href="{% url 'social:begin' 'google-oauth2' %}"><img src="{% static 'google.jpg' %}" width="32" height="32"/></a>
     </div>

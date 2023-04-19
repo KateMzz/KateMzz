@@ -58,7 +58,7 @@ def favourite_add(request, id):
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
-@ login_required
+@login_required
 def favourite_list(request):
     new = Post.objects.all().filter(favourites=request.user)
     return render(request,

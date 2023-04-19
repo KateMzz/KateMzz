@@ -35,19 +35,20 @@ def likes(request):
 
 
 def index(request):
-    posts = Post.objects.order_by('-date_posted')
+    posts = Post.objects.order_by('-created_at')
     categories = Category.objects.all()
-    context = {
+    context={
         'posts': posts,
+        'title': "List of news",
         'categories': categories
     }
-
-    return render(request, "blog/index.html", context)
+    print(context['categories'])
+    return render(request, 'news/index.html', context)
 
 
 
 def about(request):
-    return render(request, 'blog/about.html', {"about": "about page"})
+    return render(request, 'blog/about.html')
 
 
 class PostListView(ListView):
@@ -70,6 +71,8 @@ class UserPostListView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
+    template_name = "blog/post_detail2.html"
+
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -108,7 +111,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView, UserPassesTestMixin):
 
 class Search(ListView):
     # model = Post
-    template_name = 'blog/user_posts.html'
+    template_name = 'blog/index.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
@@ -131,3 +134,5 @@ def get_category(request, category_id):
     }
 
     return render(request, 'blog/category_posts.html', context)
+
+

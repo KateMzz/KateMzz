@@ -1,47 +1,8 @@
 {% extends "blog/base.html" %}
 {% block content %}
-<div class="container mt-3">
-<!--    <h1>{{ title }}</h1>-->
-<!--    <div class="row">-->
-<!--        <div class="col-md-2">-->
-<!--            <div class="list-group">-->
-<!--                {% for item in categories %}-->
-<!--                <a href="{% url 'category' item.pk %}" class="list-group-item list-group-item-action">{{ item.title }}</a>-->
-<!--                {% endfor %}-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-         <div class="col-md-8">
-            {% for item in posts %}
-            <div class="card mb-3">
-                <div class="card-header">
-                    Категория: <a href="{% url 'category' item.category.pk %}"></a>{{ item.category }}
-                </div>
-                <div class="card-body">
-                    <div class="media-body"></div>
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="" width="150" class="mr-3">
-                    {% else %}
+<legend class="border-b mb-4">
+Category {{category.title}}</legend>
 
-                        <img src="https://avatars.mds.yandex.net/i?id=f6b7a2cb791ed3fd5195ea5f48e05f9b3e3727f3-8316779-images-thumbs&n=13" alt="" width="150"  class="mr-3">
-                    {% endif %}
-                    <h5 class="card-title">{{ item.title }}</h5>
-                    <p class="card-text">{{ item.content }}</p>
-                    <a href="#" class="btn btn-primary">Read more...</a>
-                </div>
-                <div class="card-footer text-muted">
-                    {{ item.created_at|date:"Y-m-d H:i:s" }}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-<br/><br/>
-<hr>
-<br/>
-<form action="/" method="POST">
-    {% csrf_token %}
-    <button type="submit", name="blog_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button>
-</form>
+
+{% include "blog/posts_temp.html" %}
 {% endblock %}
