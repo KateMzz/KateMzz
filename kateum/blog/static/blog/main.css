@@ -1,14 +1,17 @@
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700|Lora|Playfair+Display:700i,900');
-
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300&family=Lora&display=swap');
 
 body {
   background: #fafafa;
   color: #333333;
   margin-top: 5rem;
   background-color: beige;
+  font-family: 'DM Mono', monospace;
+
+
 }
 
 h1, h2, h3, h4, h5, h6 {
+
   color: #444444;
 }
 
@@ -40,6 +43,7 @@ h1, h2, h3, h4, h5, h6 {
     border-right: 1px solid black;
     height: 453px;
     padding-top: 60px;
+
 }
 
 .block-right{
@@ -103,6 +107,7 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 170px;
     font-size: 40px;
     padding-top: 30px;
+
 }
 
 .container-fav{
@@ -210,6 +215,8 @@ ul {
   border: 1px solid #dddddd;
   border-radius: 3px;
   margin-bottom: 20px;
+  box-shadow: 4px 5px 12px 0px;
+
 }
 
 .content-section-login {
