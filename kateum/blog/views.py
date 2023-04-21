@@ -13,38 +13,27 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.models import User
 
 
+
+
 @login_required
 def likes(request):
     if request.method == "POST":
-        result = ''
-        id = request.POST.get('postid')
-        post = get_object_or_404(Post, id=id)
-        if post.post_likes.filter(id=request.user.id).exists():
-            post.post_likes.remove(request.user)
-            post.post_likes_count -= 1
-            result = post.post_likes_count
-            post.save()
-        else:
-            post.post_likes.add(request.user)
-            post.post_likes_count += 1
-            result = post.post_likes_count
-            post.save()
-        return JsonResponse({'result': result})
+            result = ''
+            id = request.POST.get('postid')
+            post = get_object_or_404(Post, id=id)
+            if post.post_likes.filter(id=request.user.id).exists():
+                post.post_likes.remove(request.user)
+                post.post_likes_count -= 1
+                result = post.post_likes_count
+                post.save()
+            else:
+                post.post_likes.add(request.user)
+                post.post_likes_count += 1
+                result = post.post_likes_count
+                post.save()
+            return JsonResponse({'result': result})
     else:
-        return JsonResponse({'error': "the request is not supported"})
-
-
-def index(request):
-    posts = Post.objects.order_by('-created_at')
-    categories = Category.objects.all()
-    context={
-        'posts': posts,
-        'title': "List of news",
-        'categories': categories
-    }
-    print(context['categories'])
-    return render(request, 'news/index.html', context)
-
+            return JsonResponse({'error': "the request is not supported"})
 
 
 def about(request):
@@ -57,22 +46,31 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-date_posted']
 
+    def get_context_data(self, **kwargs):
+        context = super(PostListView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
 
 class UserPostListView(ListView):
     model = Post
     template_name = 'blog/user_posts.html'
     context_object_name = 'posts'
 
-
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
 
+    def get_context_data(self, **kwargs):
+        context = super(UserPostListView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = "blog/post_detail2.html"
-
+    template_name = "blog/post_detail.html"
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -110,7 +108,6 @@ class PostDeleteView(LoginRequiredMixin, DeleteView, UserPassesTestMixin):
 
 
 class Search(ListView):
-    # model = Post
     template_name = 'blog/index.html'
     context_object_name = 'posts'
 
@@ -120,6 +117,8 @@ class Search(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['q'] = self.request.GET.get('q')
+        context['categories'] = Category.objects.all()
+
         return context
 
 

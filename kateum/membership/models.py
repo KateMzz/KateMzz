@@ -1,9 +1,9 @@
-# from django.db import models
-# from user.models import Profile
-# from django.dispatch import receiver
-# from django.db.models.signals import post_save
-#
-#
+from django.db import models
+from user.models import Profile
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
+
 # class UserPayment(models.Model):
 #     app_user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 #     payment_bool = models.BooleanField(default=False)

@@ -10,13 +10,22 @@ body {
 
 }
 
+.content-section-post{
+    box-shadow: 4px 5px 12px 0px #0000ff45;
+}
+
+.md-2{
+    text-align: center;
+    margin-bottom: 40px;
+}
+
 h1, h2, h3, h4, h5, h6 {
 
   color: #444444;
 }
 
 .article-category{
-    padding-top: 30px;
+    padding-top: 18px;
 }
 
 .post-image{
@@ -42,14 +51,14 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     border-right: 1px solid black;
     height: 453px;
-    padding-top: 60px;
+    padding-top: 2px;
 
 }
 
 .block-right{
     position: absolute; right: 0; width: 40%;
     text-align: inherit;
-    padding-top: 30px;
+    padding-top: 60px;
 
 }
 
@@ -66,6 +75,10 @@ h1, h2, h3, h4, h5, h6 {
 #like-button{
     margin-right: 15px;
     margin-left: 15px;
+}
+
+#like_count{
+    font-size: 20px;
 }
 
 .mr-2{
@@ -104,11 +117,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .mb-4{
-    margin-left: 170px;
+    text-align: center;
     font-size: 40px;
     padding-top: 30px;
 
 }
+
+
 
 .container-fav{
     padding-bottom: 30px;
@@ -163,6 +178,8 @@ ul {
     border-radius:100px;
     font-size: 13.5px;
     background-color: #cef0f087;
+    border-block-color: black;
+    border: groove;
 }
 
 .content-section-categ{
@@ -210,7 +227,7 @@ ul {
 }
 
 .content-section {
-  background: #ffffff;
+  background: #e8bfbf61;
   padding: 10px 20px;
   border: 1px solid #dddddd;
   border-radius: 3px;
@@ -227,6 +244,7 @@ ul {
   margin-bottom: 20px;
   width: 550px;
   margin-left: 480px
+
 }
 
 .content-section-post {
@@ -237,6 +255,10 @@ ul {
   margin-bottom: 20px;
   width: 880px;
   margin-left: 300px
+}
+
+.article-title-post{
+    text-align: center;
 }
 
 .article-title {
