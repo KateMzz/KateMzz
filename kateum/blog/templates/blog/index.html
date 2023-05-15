@@ -1,40 +1,21 @@
 {% extends "blog/base.html" %}
 {% block content %}
-<h1>Yo, let's get started with this shit</h1>
-<div>
-    {% for post in posts %}
-        <article class="media content-section">
-            <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}" alt="">
-            <a class="mr-2" href="{% url 'user_posts' post.author.username %}">{{ post.author }}</a>
-            <small class="text-muted">{{ post.date_posted|date:"d F Y" }}</small>
-          <div class="media-body">
-<!--            <div class="article-metadata">-->
-<!--              <a class="mr-2" href="{% url 'user_posts' post.author.username %}">{{ post.author }}</a>-->
-<!--              <small class="text-muted">{{ post.date_posted|date:"d F Y" }}</small>-->
-<!--            </div>-->
-              <div>
-                {% if post.image %}
-                  <img src="{{ post.image.url }}" alt="" width="150" class="mr-3 md-2">
-                  {% endif %}
-              </div>
-                <h2><a class="article-title" href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
-                <p class="article-content">{{ post.content|safe }}</p>
-
-                <div class="article-category">
-                    {% if post.category %}
-                    <a class="mr-2" href="{% url 'category' post.category.pk %}">{{ post.category }}</a>
-                    {% endif %}
-                </div>
-          </div>
-        </article>
-    {% endfor %}
+{% csrf_token %}
+{% load socialaccount %}
+{% if not user.is_authenticated %}
+<div class="middle-container">
+    <div class="main-page">
+        <div class="block-left">
+            <p>Stay curious.</p>
+            <h3>Discover stories, thinking, and expertise from writers on any topic.</h3>
+        </div>
+        <div class="block-right">
+            <img src="https://media.giphy.com/media/L5Hvew7QeSZVaWsQkV/giphy.gif"  style="box-shadow:100px 80px 3px 0px #333232cc" width="350" alt="">
+        </div>
+    </div>
 </div>
+{% endif %}
+<legend class="border-b mb-4">Trending on Kateum</legend>
 
-<br/><br/>
-<hr>
-<br/>
-<form action="/" method="POST">
-    {% csrf_token %}
-    <button type="submit", name="blog_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button>
-</form>
+{% include "blog/posts_temp.html" %}
 {% endblock %}

@@ -1,8 +1,12 @@
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
+from blog.models import Post
+
+
 # Create your views here.
 
 
@@ -42,3 +46,21 @@ def profile(request):
     }
 
     return render(request, 'user/profile.html', context)
+
+
+@login_required
+def favourite_add(request, id):
+    post = get_object_or_404(Post, id=id)
+    if post.favourites.filter(id=request.user.id).exists():
+        post.favourites.remove(request.user)
+    else:
+        post.favourites.add(request.user)
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+@login_required
+def favourite_list(request):
+    new = Post.objects.all().filter(favourites=request.user)
+    return render(request,
+                  'user/favourites.html',
+                  {'new': new})

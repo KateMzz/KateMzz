@@ -1,40 +1,43 @@
+import json
+
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.views import View
+from django.views.decorators.http import require_POST
+
 from .models import Post, Category
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 
-def LikeView(request, pk):
-    post = Post.objects.get(id=pk)
-    post.likes.add(request.user)
-    # liked = False
-    # if post.likes.filter(id=request.user.id).exists():
-    #     post.likes.remove(request.user)
-    #     liked = False
-    # else:
-    #     post.likes.add(request.user)
-    #     liked = True
-
-    return HttpResponseRedirect(reverse('article-detail', args=[str(pk)]))
 
 
 
-def index(request):
-    posts = Post.objects.order_by('-date_posted')
-    categories = Category.objects.all()
-    context = {
-        'posts': posts,
-        'categories': categories
-    }
-
-    return render(request, "blog/index.html", context)
-
+@login_required
+def likes(request):
+    if request.method == "POST":
+            result = ''
+            id = request.POST.get('postid')
+            post = get_object_or_404(Post, id=id)
+            if post.post_likes.filter(id=request.user.id).exists():
+                post.post_likes.remove(request.user)
+                post.post_likes_count -= 1
+                result = post.post_likes_count
+                post.save()
+            else:
+                post.post_likes.add(request.user)
+                post.post_likes_count += 1
+                result = post.post_likes_count
+                post.save()
+            return JsonResponse({'result': result})
+    else:
+            return JsonResponse({'error': "the request is not supported"})
 
 
 def about(request):
-    return render(request, 'blog/about.html', {"about": "about page"})
+    return render(request, 'blog/about.html')
 
 
 class PostListView(ListView):
@@ -43,20 +46,31 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-date_posted']
 
+    def get_context_data(self, **kwargs):
+        context = super(PostListView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
 
 class UserPostListView(ListView):
     model = Post
     template_name = 'blog/user_posts.html'
     context_object_name = 'posts'
 
-
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
 
+    def get_context_data(self, **kwargs):
+        context = super(UserPostListView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+
 
 class PostDetailView(DetailView):
     model = Post
+    template_name = "blog/post_detail.html"
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -94,8 +108,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView, UserPassesTestMixin):
 
 
 class Search(ListView):
-    # model = Post
-    template_name = 'blog/user_posts.html'
+    template_name = 'blog/index.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
@@ -104,6 +117,8 @@ class Search(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['q'] = self.request.GET.get('q')
+        context['categories'] = Category.objects.all()
+
         return context
 
 
@@ -118,3 +133,5 @@ def get_category(request, category_id):
     }
 
     return render(request, 'blog/category_posts.html', context)
+
+
